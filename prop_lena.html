@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lena Navarro's Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background-color: #b0a08a;
+    background-image: url('https://drive.google.com/uc?export=view&id=1FiVBKkzcp4TXn6PzXLKLQrV5QFG7LcAa');
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 60px;
+  }
+
+  .back {
+    align-self: flex-start;
+    display: inline-block;
+    background: rgba(40,10,60,0.75);
+    color: #e0c8ff;
+    text-decoration: none;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .page {
+    background-color: rgba(249, 244, 228, 0.95);
+    background-image:
+      url('https://drive.google.com/uc?export=view&id=1S52QmrPx-VHQAzFpM7UZGGV-A5VW3bAb'),
+      linear-gradient(170deg, rgba(255,252,240,0.95) 0%, rgba(240,230,205,0.92) 100%);
+    background-blend-mode: multiply;
+    background-size: 250px, cover;
+    background-position: top left, center;
+    max-width: 560px;
+    width: 100%;
+    border-radius: 1px;
+    padding: 44px 36px 52px;
+    box-shadow:
+      3px 4px 14px rgba(0,0,0,0.4),
+      -1px -1px 0 rgba(160,130,80,0.3);
+    position: relative;
+  }
+
+  /* Stain in corner */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 90px;
+    background: radial-gradient(ellipse at top right, rgba(180,140,80,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Bottom edge darkening */
+  .page::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(140,110,60,0.1));
+    border-radius: 0 0 1px 1px;
+    pointer-events: none;
+  }
+
+  .doc-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13px;
+    color: #5a4a2a;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  .doc-rule {
+    border: none;
+    border-top: 1px solid rgba(100,80,40,0.3);
+    margin: 10px 0 28px;
+  }
+
+  /* ── ENTRY ── */
+  .entry {
+    margin-bottom: 26px;
+    position: relative;
+  }
+
+  .entry-date {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #3a2810;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .entry-body {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: #1e1408;
+  }
+
+  .entry-body p {
+    margin-bottom: 8px;
+  }
+
+  .entry-body em {
+    color: #3a2810;
+    font-style: italic;
+  }
+
+  .entry-body .latin {
+    font-style: italic;
+    color: #5a3820;
+    font-size: 14.5px;
+  }
+
+  /* Margin annotation */
+  .margin {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 12px;
+    font-style: italic;
+    color: rgba(100,60,30,0.65);
+    border-left: 1px solid rgba(100,60,30,0.25);
+    padding-left: 10px;
+    margin: 6px 0 6px 20px;
+  }
+
+  /* Crossed out text */
+  .crossed {
+    text-decoration: line-through;
+    text-decoration-color: rgba(80,30,10,0.7);
+    color: #6a4a2a;
+    font-size: 14px;
+  }
+
+  /* ── LATE ENTRIES (degrading) ── */
+  .entry.late .entry-body {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: #0e0c08;
+    letter-spacing: -0.1px;
+  }
+  .entry.late .entry-date {
+    color: #1a1008;
+    font-size: 13.5px;
+  }
+
+  .entry.final {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(80,50,20,0.25);
+  }
+  .entry.final .entry-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #0e0c08;
+    letter-spacing: -0.2px;
+  }
+
+  /* Glued shut note */
+  .glued {
+    background: rgba(180,140,60,0.15);
+    border: 1px dashed rgba(120,90,40,0.4);
+    border-radius: 2px;
+    padding: 8px 12px;
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: #5a3820;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  /* Final ink note */
+  .final-ink {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13.5px;
+    font-style: italic;
+    color: #2a1408;
+    border-top: 1px solid rgba(80,50,20,0.2);
+    padding-top: 14px;
+    margin-top: 14px;
+    line-height: 1.7;
+  }
+  .final-ink .ink-note {
+    font-size: 12px;
+    color: #5a3820;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<a href="session.html" class="back">← Back to Session Guide</a>
+
+<div class="page">
+
+  <div class="doc-title">Private Research Notes — L.N.</div>
+  <hr class="doc-rule">
+
+  <div class="entry">
+    <div class="entry-date">ii March</div>
+    <div class="entry-body">
+      <p>Confirmed: working at sub-Capitol locus (ref. my grid, vol. 4, p. 33) persists without maintenance. The <em>Sigillum</em> is Kincaid's — I would know his hand in wax or blood or stone — but something feeds it that isn't him. Either the seal was designed to feed itself, which he was not capable of in 2010, or it has been fed by someone who knows his methodology with an intimacy that disturbs me to contemplate.</p>
+      <p class="latin">Quaeritur: where is the anchor.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-date">iii March</div>
+    <div class="entry-body">
+      <p>The seals do not ward. This took me a week to accept. They <em>describe.</em> There is a distinction here that Octavia would call pedantic and Octavia would be wrong. A ward is a door. A description is a <em>map.</em> I have been looking for a lock and I am standing in a cartographer's office.</p>
+      <p>Something has been mapped.</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-date">i April</div>
+    <div class="entry-body">
+      <p>The correspondence inverted along the vertical. <span class="latin">Sicut inferius, sicut superius</span> — as below, so above. Reversed deliberately. I have three centuries of Hermetic precedent in this room and not one of them inverts the vertical on purpose. You would have to <em>decide</em> to do this. You would have to decide it was correct.</p>
+      <p>The apparatus requires blood. Not as catalyst. Not as symbolic medium. As <em>intake.</em> I have found collection vessels at three nodes. They are not ritual objects. They are plumbing.</p>
+    </div>
+  </div>
+
+  <div class="entry late">
+    <div class="entry-date">ii April</div>
+    <div class="entry-body">
+      <p>Found a sigil I cannot place. Not from any tradition I recognize and I recognize most. Sent rubbings to Heinrich, to Vasquez, to the woman in Lisbon whose name I am not writing down. None have written back. Heinrich always writes back.</p>
+      <p>I have drawn the sigil seven times in my notes trying to understand it. I have just noticed that the seventh iteration is larger than the others. I did not do that consciously.</p>
+      <div class="glued">[ page glued shut — this note is a later addition ]<br>I am going to glue this page shut.</div>
+    </div>
+  </div>
+
+  <div class="entry late">
+    <div class="entry-date">iii April</div>
+    <div class="entry-body">
+      <p>It collects <em>resonance.</em> Not merely blood — the impressions held in blood. Lineage. Discipline. Memory of power. Every clan, metabolized and retained. I do not know where it is retained. I cannot find the vessel large enough to hold what it would need to hold by now.</p>
+      <p>Something is making a complete accounting of us. For what purpose a complete accounting.</p>
+      <p class="latin">Ad quid.</p>
+      <div class="margin">spoke to Octavia — <span class="crossed">she must not know what I have found</span> — she cannot know yet</div>
+    </div>
+  </div>
+
+  <div class="entry final">
+    <div class="entry-date">[no date]</div>
+    <div class="entry-body">
+      <p>The sigil is in Kincaid's early notebooks. Page 40, bottom margin, I thought it was a water stain. It is not a water stain. He hid it in plain sight inside his own private notation system which means he hid it from himself or he hid it from anyone who might read over his shoulder or he did not put it there.</p>
+      <p>I found a name in the sub-architecture. I will not write it here or anywhere.</p>
+      <p>The working is his but the <em>premise</em> is not. The premise is older. Much older. Something gave him the premise and I do not think it gave it as a gift.</p>
+
+      <div class="final-ink">
+        <p class="ink-note">[ different ink — added later — very carefully: ]</p>
+        <p>I think he thought he was the one who thought of it.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

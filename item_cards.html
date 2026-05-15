@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item Cards — Vox Violenta</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0d0f;
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .back {
+    align-self: flex-start;
+    display: inline-block;
+    background: rgba(100,40,120,0.7);
+    color: #e0c8ff;
+    text-decoration: none;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    color: #9b59b6;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 32px;
+    opacity: 0.7;
+  }
+
+  /* ── CARD ── */
+  .card {
+    width: 100%;
+    max-width: 420px;
+    margin-bottom: 32px;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.7),
+      0 0 0 1px rgba(100,60,140,0.3);
+  }
+
+  /* Paper texture background */
+  .card-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://drive.google.com/uc?export=view&id=1MDWP3OWwhxSUyXaRKUSyKKsiwC-8T28h');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.12;
+  }
+
+  /* Dark overlay so text is readable */
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #1a0a2e 0%, #0d0810 60%, #1a0510 100%);
+    opacity: 0.92;
+  }
+
+  .card-inner {
+    position: relative;
+    z-index: 2;
+    padding: 28px 24px 24px;
+  }
+
+  /* ── BORDER ORNAMENT ── */
+  .card-border {
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(120,60,160,0.35);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .card-border::before,
+  .card-border::after {
+    content: '✦';
+    position: absolute;
+    color: rgba(150,80,200,0.5);
+    font-size: 10px;
+  }
+  .card-border::before { top: -7px; left: 50%; transform: translateX(-50%); }
+  .card-border::after  { bottom: -7px; left: 50%; transform: translateX(-50%); }
+
+  /* ── BLOOD TEXTURE overlay (subtle, top corner) ── */
+  .card-blood {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 160px;
+    height: 120px;
+    background-image: url('https://drive.google.com/uc?export=view&id=14Q5l-KejNVVO_TMQL-YieuG9nD-qGaNN');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.07;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── ITEM TYPE TAG ── */
+  .item-type {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(150,80,200,0.7);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* ── ITEM NAME ── */
+  .item-name {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #e8d0ff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(120,60,160,0.5), transparent);
+  }
+  .divider-glyph {
+    color: rgba(150,80,200,0.6);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* ── FLAVOR TEXT ── */
+  .flavor {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #c4a8d8;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  /* ── DESCRIPTION ── */
+  .description {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 14.5px;
+    color: #a898b8;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  /* ── SYSTEM BLOCK ── */
+  .system-block {
+    background: rgba(60,20,80,0.5);
+    border: 1px solid rgba(100,50,140,0.4);
+    border-radius: 2px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .system-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(180,120,220,0.8);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .system-text {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 14px;
+    color: #d4b8e8;
+    line-height: 1.6;
+  }
+
+  /* ── DRAWBACK BLOCK ── */
+  .drawback-block {
+    background: rgba(80,10,10,0.4);
+    border: 1px solid rgba(140,40,40,0.4);
+    border-radius: 2px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .drawback-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(200,80,80,0.8);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .drawback-text {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 14px;
+    color: #d4a0a0;
+    line-height: 1.6;
+  }
+
+  /* ── DOT RATING ── */
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .rating-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(150,80,200,0.6);
+    text-transform: uppercase;
+  }
+  .dots {
+    display: flex;
+    gap: 4px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(150,80,200,0.8);
+    box-shadow: 0 0 4px rgba(150,80,200,0.5);
+  }
+  .dot.empty {
+    background: transparent;
+    border: 1px solid rgba(150,80,200,0.35);
+    box-shadow: none;
+  }
+
+  /* ── JACK'S REVOLVER — special western flavor ── */
+  .card.revolver .card-overlay {
+    background: linear-gradient(160deg, #1a0f00 0%, #0d0808 60%, #150a0a 100%);
+    opacity: 0.93;
+  }
+  .card.revolver .card-border {
+    border-color: rgba(160,100,40,0.35);
+  }
+  .card.revolver .card-border::before,
+  .card.revolver .card-border::after {
+    color: rgba(160,100,40,0.5);
+  }
+  .card.revolver .item-type { color: rgba(180,120,40,0.7); }
+  .card.revolver .item-name { color: #f0ddb0; }
+  .card.revolver .divider-line {
+    background: linear-gradient(90deg, transparent, rgba(160,100,40,0.5), transparent);
+  }
+  .card.revolver .divider-glyph { color: rgba(160,100,40,0.6); }
+  .card.revolver .flavor { color: #c8b07a; }
+  .card.revolver .description { color: #a89870; }
+  .card.revolver .system-block {
+    background: rgba(60,35,5,0.5);
+    border-color: rgba(140,90,20,0.4);
+  }
+  .card.revolver .system-label { color: rgba(200,150,60,0.8); }
+  .card.revolver .system-text { color: #d4b870; }
+  .card.revolver .drawback-block {
+    background: rgba(50,10,10,0.5);
+    border-color: rgba(120,30,30,0.4);
+  }
+  .card.revolver .dot { background: rgba(180,120,40,0.8); box-shadow: 0 0 4px rgba(180,120,40,0.5); }
+  .card.revolver .dot.empty { border-color: rgba(180,120,40,0.35); }
+  .card.revolver .rating-label { color: rgba(180,120,40,0.6); }
+</style>
+</head>
+<body>
+
+<a href="session.html" class="back">← Back to Session Guide</a>
+<h1>Rewards & Artifacts</h1>
+
+<!-- CARD 1: THE ADVOCATE'S SEAL -->
+<div class="card">
+  <div class="card-bg"></div>
+  <div class="card-overlay"></div>
+  <div class="card-blood"></div>
+  <div class="card-border"></div>
+  <div class="card-inner">
+    <span class="item-type">Lasombra Relic · Minor Artifact</span>
+    <div class="item-name">The Advocate's Seal</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-glyph">✦</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="flavor">A stamp of heavy iron, the crest worn nearly smooth by centuries of use. It has passed through enough hands that its origins are impossible to verify. Lucita gave it without ceremony and without explanation. That alone should tell you something.</p>
+
+    <p class="description">The Lasombra have always understood that authority is a performance. The right mark on the right document creates facts that a dozen witnesses cannot undo. This seal does not forge identity — it implies backing, and implication, in Kindred society, is often enough.</p>
+
+    <div class="system-block">
+      <span class="system-label">System</span>
+      <p class="system-text">Any document, letter, or message bearing this seal carries the weight of Lasombra patronage — unspoken, unverified, but felt. In both Sabbat and Camarilla spaces, doors open. Primogen return calls. Invitations arrive. No one asks questions to your face.</p>
+    </div>
+
+    <div class="drawback-block">
+      <span class="drawback-label">Drawback</span>
+      <p class="drawback-text">Lucita knows every time it is used. She has not explained what she intends to do with that information.</p>
+    </div>
+
+    <div class="rating">
+      <span class="rating-label">Rating</span>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 2: THE STILL MIRROR -->
+<div class="card">
+  <div class="card-bg"></div>
+  <div class="card-overlay"></div>
+  <div class="card-blood"></div>
+  <div class="card-border"></div>
+  <div class="card-inner">
+    <span class="item-type">Lasombra Relic · Minor Artifact</span>
+    <div class="item-name">The Still Mirror</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-glyph">✦</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="flavor">A hand mirror of black glass in a tarnished silver frame. It shows no reflection — only shadow, pooling and shifting in the glass like something breathing beneath still water. Looking into it too long is inadvisable. Looking away is harder than it should be.</p>
+
+    <p class="description">The Lasombra have always known that the Abyss reveals what light conceals. This mirror was not crafted so much as <em>grown</em> — left at the edge of shadow long enough that something on the other side decided to press itself into the glass.</p>
+
+    <div class="system-block">
+      <span class="system-label">System</span>
+      <p class="system-text">Turn the mirror toward any Kindred and their shadow betrays the truth their face will not. Not thoughts, not history — only whether they are lying right now, in this moment. This works once per conversation; after that, even they feel something pulling at them.</p>
+    </div>
+
+    <div class="drawback-block">
+      <span class="drawback-label">Drawback</span>
+      <p class="drawback-text">The bearer's own reflection has begun appearing in other mirrors half a second late. Not dramatically. Just late enough to notice, if you're the kind of person who notices.</p>
+    </div>
+
+    <div class="rating">
+      <span class="rating-label">Rating</span>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 3: THE DEBTOR'S RIBBON -->
+<div class="card">
+  <div class="card-bg"></div>
+  <div class="card-overlay"></div>
+  <div class="card-blood"></div>
+  <div class="card-border"></div>
+  <div class="card-inner">
+    <span class="item-type">Lasombra Relic · Minor Artifact</span>
+    <div class="item-name">The Debtor's Ribbon</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-glyph">✦</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="flavor">A length of black silk, old enough that the weave has gone soft at the edges. It is knotted once — a knot that was already there when Lucita handed it over. She did not explain it.</p>
+
+    <p class="description">Boons among the Kindred are enforced by reputation and the long memory of the undead. This ribbon enforces them differently. Tie it around a favor owed — a letter, a token, anything that names the debt — and the agreement binds in ways older than courts.</p>
+
+    <div class="system-block">
+      <span class="system-label">System</span>
+      <p class="system-text">A debt bound with this ribbon becomes spiritually binding in the Lasombra tradition. The creditor always knows if the debtor is lying about intent to repay. The debtor always knows, in their blood, that someone is watching. Neither party can fully explain how they know. They simply do.</p>
+    </div>
+
+    <div class="drawback-block">
+      <span class="drawback-label">Drawback</span>
+      <p class="drawback-text">There is already one knot in it. Whatever debt it represents, whatever Lucita is owed — that obligation does not vanish simply because the ribbon has changed hands.</p>
+    </div>
+
+    <div class="rating">
+      <span class="rating-label">Rating</span>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 4: THE PENITENT'S HOOD -->
+<div class="card">
+  <div class="card-bg"></div>
+  <div class="card-overlay"></div>
+  <div class="card-blood"></div>
+  <div class="card-border"></div>
+  <div class="card-inner">
+    <span class="item-type">Lasombra Relic · Minor Artifact</span>
+    <div class="item-name">The Penitent's Hood</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-glyph">✦</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="flavor">A folded square of black cloth, unremarkable until worn. It smells faintly of incense and something older, something that has no name in any language still spoken. The original owner wore it to confession. They did not survive the night they took it off.</p>
+
+    <p class="description">The Lasombra Inquisition produced tools for every need. This one was made for those who had to move through spaces where being remembered was a death sentence. It does not hide the body. It convinces the mind there is nothing worth remembering.</p>
+
+    <div class="system-block">
+      <span class="system-label">System</span>
+      <p class="system-text">Worn over the face, the bearer becomes narratively forgettable. Mortals who observe them afterward struggle to hold the image — they remember a figure, a shape, a sense of presence, but nothing that could fill a description. Kindred retain more, but even they find the memory strangely smooth, like trying to recall a dream hours after waking.</p>
+    </div>
+
+    <div class="drawback-block">
+      <span class="drawback-label">Drawback</span>
+      <p class="drawback-text">The hood is saturated with its last owner's final memory. The bearer does not receive it all at once. It comes in pieces — the longer the hood is worn, the more vivid those pieces become. Whoever this Kindred was, they died badly, and they knew it was coming.</p>
+    </div>
+
+    <div class="rating">
+      <span class="rating-label">Rating</span>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 5: JACK'S REVOLVER -->
+<div class="card revolver">
+  <div class="card-bg"></div>
+  <div class="card-overlay"></div>
+  <div class="card-border"></div>
+  <div class="card-inner">
+    <span class="item-type">Haunted Weapon · Unique</span>
+    <div class="item-name">Jack's Revolver</div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-glyph">✦</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <p class="flavor">An old Colt single-action, worn smooth at every edge that a hand would touch. It does not appear on cameras. It does not register on metal detectors. People who aren't meant to see it never quite do. It is heavier than it looks, and it has been waiting a very long time for someone to pick it up.</p>
+
+    <p class="description">John Coffee Hays carried this revolver through half the history of Texas. After his death it passed through too many hands, was used in a murder, thrown into the river, and found by a man who had nowhere else to go. When that man was run off, he left the gun behind. Jack has been in the bunker ever since. He is still in it now — only now, he is in it with you.</p>
+
+    <div class="system-block">
+      <span class="system-label">System</span>
+      <p class="system-text">The revolver fires normally. Whatever it hits does not heal right. The wound closes — Vitae works, Fortitude works, flesh knits — but the damage sits underneath like a stone under skin, a persistent wrongness that resurfaces whenever the body is stressed. Kindred feel it on every Rouse. Mortals feel it in cold weather, in quiet rooms, in the moment before sleep. Nothing removes it but time, and time moves slowly for the dead.</p>
+    </div>
+
+    <div class="drawback-block">
+      <span class="drawback-label">Drawback</span>
+      <p class="drawback-text">The gun is Jack's anchor. Taking it from the bunker means Jack comes with it — not bound to the weapon exactly, but to whoever carries it, the way he was bound to that room. He does not interfere. He observes. He has opinions, in the way that men who helped build a state have opinions, about whether what you are doing is right. Occasionally, at the worst possible moment, he will say so.<br><br>He has been asking where his bones are for a very long time. You are, as far as he can tell, the first people worth asking.</p>
+    </div>
+
+    <div class="rating">
+      <span class="rating-label">Rating</span>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot empty"></div>
+        <div class="dot empty"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

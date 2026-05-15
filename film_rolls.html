@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misha's Film — Vox Violenta</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0c0c0c;
+    min-height: 100vh;
+    padding: 28px 16px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .back {
+    align-self: flex-start;
+    display: inline-block;
+    background: rgba(30,30,30,0.9);
+    color: #c8a040;
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(200,160,60,0.2);
+  }
+
+  .page-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(200,160,60,0.4);
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .page-subtitle {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(200,160,60,0.25);
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  /* ── FILM STRIP CARD ── */
+  .strip {
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 28px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The film strip container */
+  .film {
+    background: #1a1200;
+    border: 1px solid #2a1e00;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 6px 24px rgba(0,0,0,0.8),
+      inset 0 0 40px rgba(0,0,0,0.5);
+  }
+
+  /* Sprocket holes — top and bottom strips */
+  .sprockets {
+    height: 22px;
+    background: #0f0b00;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sprockets::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 16px,
+      #1a1200 16px,
+      #1a1200 18px,
+      transparent 18px,
+      transparent 20px
+    );
+  }
+
+  /* Individual sprocket holes */
+  .sprocket-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 22px;
+    background: #0f0b00;
+    padding: 4px 6px;
+    gap: 8px;
+  }
+
+  .sprocket-hole {
+    width: 12px;
+    height: 10px;
+    background: #0c0c0c;
+    border-radius: 2px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.8);
+  }
+
+  .sprocket-spacer { flex: 1; }
+
+  /* Frame counter */
+  .frame-counter {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    color: rgba(255,160,0,0.3);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  /* The actual "frame" area */
+  .frame {
+    background: #120e00;
+    padding: 20px 22px 22px;
+    position: relative;
+    /* Film grain overlay */
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* Amber vignette edges */
+  .frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 50%, rgba(80,40,0,0.4) 100%);
+    pointer-events: none;
+  }
+
+  /* Roll label */
+  .roll-label {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .roll-number {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 28px;
+    font-weight: bold;
+    color: rgba(255,160,0,0.15);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .roll-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255,160,0,0.55);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* What the eye saw */
+  .eye-saw {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(200,140,30,0.45);
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(200,140,30,0.1);
+    position: relative;
+    z-index: 1;
+    line-height: 1.6;
+  }
+
+  .eye-saw::before {
+    content: 'SUBJECT (AS OBSERVED)';
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: rgba(200,140,30,0.25);
+    margin-bottom: 6px;
+  }
+
+  /* What the film captured */
+  .film-saw {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 15px;
+    color: #d4a830;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 14px;
+  }
+
+  .film-saw::before {
+    content: 'DEVELOPED — FILM RECORD';
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: rgba(212,168,48,0.5);
+    margin-bottom: 8px;
+  }
+
+  /* Note / implication block */
+  .implication {
+    background: rgba(200,140,0,0.07);
+    border-left: 2px solid rgba(200,140,0,0.3);
+    padding: 10px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: rgba(212,168,48,0.6);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+
+  .implication::before {
+    content: '// ';
+    opacity: 0.5;
+  }
+
+  /* Damage/exposure note */
+  .exposure-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: rgba(200,140,0,0.2);
+    letter-spacing: 1.5px;
+    margin-top: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Special: roll 5 has a shaky-hand detail */
+  .strip.damaged .film {
+    background: #1a0e00;
+  }
+  .strip.damaged .roll-number { color: rgba(255,80,0,0.15); }
+  .strip.damaged .roll-title { color: rgba(255,100,0,0.55); }
+  .strip.damaged .film-saw { color: #d46020; }
+  .strip.damaged .film-saw::before { color: rgba(212,96,32,0.5); }
+  .strip.damaged .implication {
+    border-left-color: rgba(200,80,0,0.4);
+    color: rgba(212,96,32,0.7);
+    background: rgba(200,80,0,0.07);
+  }
+  .strip.damaged .sprocket-row { background: #100800; }
+  .strip.damaged .frame-counter { color: rgba(255,100,0,0.3); }
+</style>
+</head>
+<body>
+
+<a href="session.html" class="back">← Back to Session Guide</a>
+<div class="page-title">Misha — 35mm Analog / Developed</div>
+<div class="page-subtitle">Five rolls. Regular film. No digital processing.</div>
+
+<!-- ROLL 1 -->
+<div class="strip">
+  <div class="film">
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">R01 · 36EXP · ASA400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+
+    <div class="frame">
+      <div class="roll-label">
+        <span class="roll-number">01</span>
+        <span class="roll-title">Exterior — Entry</span>
+      </div>
+
+      <div class="eye-saw">A Victorian house at the end of a lot. Unremarkable. Easy to look past.</div>
+
+      <div class="film-saw">The ward is visible. A smear of overexposed light sits across the threshold — not a reflection, not a lens flare. It has edges. It was placed there. In frame 14, partially obscured by the door frame: a figure. Not a ghost. Not an intruder. Someone who was admitted. The body language is unhurried. They knew the door would open.</div>
+
+      <div class="implication">Someone was let in. Recently enough to register. Find out who.</div>
+
+      <div class="exposure-note">14 FRAMES USABLE · 2 OVEREXPOSED · WARD INTERFERENCE SUSPECTED</div>
+    </div>
+
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">KODAK T-MAX 400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROLL 2 -->
+<div class="strip">
+  <div class="film">
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">R02 · 36EXP · ASA400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+
+    <div class="frame">
+      <div class="roll-label">
+        <span class="roll-number">02</span>
+        <span class="roll-title">Den — Hall Doors</span>
+      </div>
+
+      <div class="eye-saw">A corridor. Identical doors on both sides. The loop that returns you to the beginning, or somewhere like it.</div>
+
+      <div class="film-saw">The doors are not identical. One door frame carries a chalk mark — barely a centimeter, cut into the upper right corner of the jamb. Invisible in ambient light, legible on silver halide. It is a Tremere wayfinding notation, the kind chalked by someone who had to navigate this corridor regularly and couldn't trust their own memory to stay intact. That door is real. The others are the loop.</div>
+
+      <div class="implication">There is a correct door. Someone who lived here marked it. It leads somewhere specific, and they needed to reach it reliably.</div>
+
+      <div class="exposure-note">28 FRAMES USABLE · GEOMETRIC DISTORTION ON 9 FRAMES · EMULSION INTACT</div>
+    </div>
+
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">KODAK T-MAX 400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROLL 3 -->
+<div class="strip">
+  <div class="film">
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">R03 · 36EXP · ASA400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+
+    <div class="frame">
+      <div class="roll-label">
+        <span class="roll-number">03</span>
+        <span class="roll-title">Stair Down — Fake Outdoors</span>
+      </div>
+
+      <div class="eye-saw">A staircase descending into a room that appears to open onto the outside. A sky. Trees, maybe. A sense of open air in a space that should have walls.</div>
+
+      <div class="film-saw">The sky is real. Every frame confirms it — not a projection, not a ward-induced hallucination, not a painted ceiling. A sky. The stars in it are not any constellation in the northern hemisphere, or any hemisphere. They are consistent across all thirty-one usable frames. Whatever that room is, it has a sky that was put there. Someone chose those stars specifically and arranged them in that pattern for a reason that has nothing to do with navigation.</div>
+
+      <div class="implication">That room opens onto somewhere that is not Austin, Texas. The stars are a coordinate, or a key, or a name. They mean something to someone.</div>
+
+      <div class="exposure-note">31 FRAMES USABLE · SKY CONFIRMED ACROSS ALL FRAMES · ORIGIN UNKNOWN</div>
+    </div>
+
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">KODAK T-MAX 400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROLL 4 -->
+<div class="strip">
+  <div class="film">
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">R04 · 36EXP · ASA400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+
+    <div class="frame">
+      <div class="roll-label">
+        <span class="roll-number">04</span>
+        <span class="roll-title">Scale · Loop · Lux</span>
+      </div>
+
+      <div class="eye-saw">The distortions. The wrong light. The rooms that refuse proportion. Not the Umbra — something designed, not grown.</div>
+
+      <div class="film-saw">The light resolves into structure. What the eye reads as distortion or ambient wrongness has a skeleton — lines of force running through the building's architecture, load-bearing in the magical sense. They intersect at seven points. The film captured five of them clearly. The house's spatial warping does not fill the whole building equally. It is concentrated. It has weight, and the weight rests somewhere specific, and if that point of concentration were disrupted, the geometry would fail.</div>
+
+      <div class="implication">This is a partial structural map of the warping. The five intersection points are marked. Find the other two and you have the whole blueprint. Find the load-bearing center and you have a way to bring it down.</div>
+
+      <div class="exposure-note">19 FRAMES USABLE · 17 CORRUPTED BY LUX INTERFERENCE · 5 NODES CONFIRMED</div>
+    </div>
+
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">KODAK T-MAX 400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROLL 5 — DAMAGED / HOT -->
+<div class="strip damaged">
+  <div class="film">
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">R05 · 36EXP · ASA400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+
+    <div class="frame">
+      <div class="roll-label">
+        <span class="roll-number">05</span>
+        <span class="roll-title">Navarro's Office</span>
+      </div>
+
+      <div class="eye-saw">The Primogen's office. Papers. A broken lock. Blood on the wall that looked like equations in the moment.</div>
+
+      <div class="film-saw">The blood on the wall is not equations. The equations are on the papers. The blood is a circuit schematic — and under flash, on silver halide, it is legible. It diagrams an apparatus that accepts vitae as simultaneous input from multiple collection points and routes it to a central location. The schematic is complete on the visible wall. The wall continues out of frame to the right. The central terminus — where all the blood goes — is not in any of these photographs. Misha's hand was shaking on the last three frames. They're usable anyway.</div>
+
+      <div class="implication">The circuit is real and it is functional and it routes to somewhere in this building that was never photographed. The schematic is incomplete by exactly one piece: the destination.</div>
+
+      <div class="exposure-note">11 FRAMES USABLE · EMULSION STRESS ON FINAL 3 · TERMINUS NOT CAPTURED</div>
+    </div>
+
+    <div class="sprocket-row">
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-spacer"></div>
+      <div class="frame-counter">KODAK T-MAX 400</div>
+      <div class="sprocket-spacer"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+      <div class="sprocket-hole"></div><div class="sprocket-hole"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
